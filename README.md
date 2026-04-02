@@ -2,7 +2,7 @@
 
 Home Assistant integration for SIGNALduino RF receiver/transmitter hardware. Supports SOMFY RTS protocol for controlling blinds, shutters, and other RF devices via serial connection.
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/thecodingdad/ha-signalduino)](https://github.com/thecodingdad/ha-signalduino/releases)
 
 ## Features
@@ -24,10 +24,13 @@ Home Assistant integration for SIGNALduino RF receiver/transmitter hardware. Sup
 
 ### HACS (Recommended)
 
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=thecodingdad&repository=ha-signalduino&category=integration)
+
+Or add manually:
 1. Open HACS in your Home Assistant instance
-2. Click "Explore & Download Repositories"
-3. Search for "SIGNALduino"
-4. Click "Download"
+2. Click the three dots in the top right corner and select **Custom repositories**
+3. Enter `https://github.com/thecodingdad/ha-signalduino` and select **Integration** as the category
+4. Click **Add**, then search for "SIGNALduino" and download it
 5. Restart Home Assistant
 
 ### Manual Installation
