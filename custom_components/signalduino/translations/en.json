@@ -1,0 +1,134 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SIGNALduino Setup",
+        "description": "Enter the serial port path for your SIGNALduino USB stick.",
+        "data": {
+          "serial_port": "Serial port"
+        },
+        "data_description": {
+          "serial_port": "Path to the serial device, e.g. /dev/ttyUSB0 or /dev/serial/by-id/..."
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure SIGNALduino",
+        "description": "Change the serial port path.",
+        "data": {
+          "serial_port": "Serial port"
+        },
+        "data_description": {
+          "serial_port": "Path to the serial device, e.g. /dev/ttyUSB0 or /dev/serial/by-id/..."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to SIGNALduino on the specified port.",
+      "port_not_found": "Serial port not found. Check the device path.",
+      "port_busy": "Serial port is busy. Another process is using it. Stop that process first.",
+      "port_permission": "Permission denied for serial port. Check device permissions.",
+      "no_version_response": "Device did not respond with a valid SIGNALduino firmware version.",
+      "already_configured": "This SIGNALduino is already configured."
+    },
+    "abort": {
+      "already_configured": "This SIGNALduino is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "SIGNALduino Options",
+        "menu_options": {
+          "add_device": "Add SOMFY device"
+        }
+      },
+      "add_device": {
+        "title": "Add SOMFY Device",
+        "description": "Configure a new SOMFY RTS shutter or blind.",
+        "data": {
+          "name": "Device name",
+          "address": "Address"
+        },
+        "data_description": {
+          "address": "6-digit hex address (e.g. AB1234)"
+        }
+      }
+    },
+    "error": {
+      "invalid_address": "Invalid address. Must be exactly 6 hex digits.",
+      "device_exists": "A device with this address already exists."
+    }
+  },
+  "services": {
+    "pair_device": {
+      "name": "Pair device",
+      "description": "Send a PROG command to pair the SIGNALduino with a SOMFY shutter.",
+      "fields": {
+        "address": {
+          "name": "Address",
+          "description": "6-digit hex address of the SOMFY device."
+        },
+        "entry_id": {
+          "name": "Config entry",
+          "description": "Config entry ID of the SIGNALduino hub."
+        }
+      }
+    },
+    "send_raw_command": {
+      "name": "Send raw command",
+      "description": "Send a raw command to the SIGNALduino stick.",
+      "fields": {
+        "command": {
+          "name": "Command",
+          "description": "The raw command string."
+        },
+        "entry_id": {
+          "name": "Config entry",
+          "description": "Config entry ID of the SIGNALduino hub."
+        }
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "pair": {
+        "name": "Pair"
+      }
+    },
+    "cover": {
+      "somfy_cover": {
+        "name": "Cover"
+      }
+    },
+    "number": {
+      "drive_time_down": {
+        "name": "Drive time down"
+      },
+      "drive_time_up": {
+        "name": "Drive time up"
+      },
+      "repeats": {
+        "name": "RF repeats"
+      }
+    },
+    "sensor": {
+      "rolling_code": {
+        "name": "Rolling code"
+      },
+      "enc_key": {
+        "name": "Encryption key"
+      },
+      "connection_state": {
+        "name": "Connection state"
+      }
+    },
+    "switch": {
+      "invert_position": {
+        "name": "Invert open/close"
+      },
+      "fixed_enc_key": {
+        "name": "Fixed encryption key"
+      }
+    }
+  }
+}

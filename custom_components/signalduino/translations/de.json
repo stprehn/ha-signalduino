@@ -1,0 +1,134 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "SIGNALduino Einrichtung",
+        "description": "Geben Sie den seriellen Port-Pfad Ihres SIGNALduino USB-Sticks ein.",
+        "data": {
+          "serial_port": "Serieller Port"
+        },
+        "data_description": {
+          "serial_port": "Pfad zum seriellen Gerät, z.B. /dev/ttyUSB0 oder /dev/serial/by-id/..."
+        }
+      },
+      "reconfigure": {
+        "title": "SIGNALduino neu konfigurieren",
+        "description": "Seriellen Port-Pfad ändern.",
+        "data": {
+          "serial_port": "Serieller Port"
+        },
+        "data_description": {
+          "serial_port": "Pfad zum seriellen Gerät, z.B. /dev/ttyUSB0 oder /dev/serial/by-id/..."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zum SIGNALduino am angegebenen Port nicht möglich.",
+      "port_not_found": "Serieller Port nicht gefunden. Bitte Gerätepfad prüfen.",
+      "port_busy": "Serieller Port ist belegt. Ein anderer Prozess nutzt ihn. Bitte diesen Prozess zuerst stoppen.",
+      "port_permission": "Zugriff auf den seriellen Port verweigert. Berechtigungen prüfen.",
+      "no_version_response": "Das Gerät hat nicht mit einer gültigen SIGNALduino-Firmwareversion geantwortet.",
+      "already_configured": "Dieser SIGNALduino ist bereits konfiguriert."
+    },
+    "abort": {
+      "already_configured": "Dieser SIGNALduino ist bereits konfiguriert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "SIGNALduino Optionen",
+        "menu_options": {
+          "add_device": "SOMFY-Gerät hinzufügen"
+        }
+      },
+      "add_device": {
+        "title": "SOMFY-Gerät hinzufügen",
+        "description": "Konfigurieren Sie einen neuen SOMFY RTS Rollladen oder Jalousie.",
+        "data": {
+          "name": "Gerätename",
+          "address": "Adresse"
+        },
+        "data_description": {
+          "address": "6-stellige Hex-Adresse (z.B. AB1234)"
+        }
+      }
+    },
+    "error": {
+      "invalid_address": "Ungültige Adresse. Muss genau 6 Hex-Ziffern enthalten.",
+      "device_exists": "Ein Gerät mit dieser Adresse existiert bereits."
+    }
+  },
+  "services": {
+    "pair_device": {
+      "name": "Gerät koppeln",
+      "description": "PROG-Befehl senden, um den SIGNALduino mit einem SOMFY-Rollladen zu koppeln.",
+      "fields": {
+        "address": {
+          "name": "Adresse",
+          "description": "6-stellige Hex-Adresse des SOMFY-Geräts."
+        },
+        "entry_id": {
+          "name": "Konfigurationseintrag",
+          "description": "Konfigurationseintrags-ID des SIGNALduino-Hubs."
+        }
+      }
+    },
+    "send_raw_command": {
+      "name": "Rohbefehl senden",
+      "description": "Einen Rohbefehl an den SIGNALduino-Stick senden.",
+      "fields": {
+        "command": {
+          "name": "Befehl",
+          "description": "Der Rohbefehl als Zeichenkette."
+        },
+        "entry_id": {
+          "name": "Konfigurationseintrag",
+          "description": "Konfigurationseintrags-ID des SIGNALduino-Hubs."
+        }
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "pair": {
+        "name": "Koppeln"
+      }
+    },
+    "cover": {
+      "somfy_cover": {
+        "name": "Abdeckung"
+      }
+    },
+    "number": {
+      "drive_time_down": {
+        "name": "Fahrzeit herunter"
+      },
+      "drive_time_up": {
+        "name": "Fahrzeit herauf"
+      },
+      "repeats": {
+        "name": "RF-Wiederholungen"
+      }
+    },
+    "sensor": {
+      "rolling_code": {
+        "name": "Rolling Code"
+      },
+      "enc_key": {
+        "name": "Verschlüsselungsschlüssel"
+      },
+      "connection_state": {
+        "name": "Verbindungsstatus"
+      }
+    },
+    "switch": {
+      "invert_position": {
+        "name": "Auf/Zu invertieren"
+      },
+      "fixed_enc_key": {
+        "name": "Fester Verschlüsselungsschlüssel"
+      }
+    }
+  }
+}

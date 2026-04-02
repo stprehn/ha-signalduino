@@ -1,0 +1,37 @@
+pair_device:
+  name: Pair device
+  description: Send a PROG command to pair the SIGNALduino as a new remote for a SOMFY shutter.
+  fields:
+    address:
+      name: Address
+      description: 6-digit hex address of the SOMFY device (e.g. AB1234).
+      required: true
+      example: "AB1234"
+      selector:
+        text:
+    entry_id:
+      name: Config entry
+      description: Config entry ID of the SIGNALduino hub. Optional if only one hub exists.
+      required: false
+      selector:
+        config_entry:
+          integration: signalduino
+
+send_raw_command:
+  name: Send raw command
+  description: Send an arbitrary command string to the SIGNALduino USB stick.
+  fields:
+    command:
+      name: Command
+      description: The raw command string to send.
+      required: true
+      example: "V"
+      selector:
+        text:
+    entry_id:
+      name: Config entry
+      description: Config entry ID of the SIGNALduino hub. Optional if only one hub exists.
+      required: false
+      selector:
+        config_entry:
+          integration: signalduino
