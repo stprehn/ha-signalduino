@@ -4,9 +4,9 @@
   "codeowners": ["@thecodingdad"],
   "config_flow": true,
   "documentation": "https://github.com/thecodingdad/ha-signalduino",
-  "issue_tracker": "https://github.com/thecodingdad/ha-signalduino/issues",
   "integration_type": "hub",
   "iot_class": "local_push",
+  "issue_tracker": "https://github.com/thecodingdad/ha-signalduino/issues",
   "requirements": ["pyserial-asyncio-fast>=0.13"],
   "version": "1.0.0"
 }
