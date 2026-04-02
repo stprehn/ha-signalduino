@@ -17,7 +17,7 @@ Home Assistant integration for SIGNALduino RF receiver/transmitter hardware. Sup
 
 ## Prerequisites
 
-- Home Assistant 2024.1.0 or newer
+- Home Assistant 2026.3.0 or newer
 - SIGNALduino hardware connected via serial port (e.g. /dev/ttyUSB0)
 
 ## Installation
