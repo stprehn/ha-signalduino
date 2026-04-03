@@ -1,6 +1,6 @@
 # SIGNALduino
 
-Home Assistant integration for SIGNALduino RF receiver/transmitter hardware. Supports SOMFY RTS protocol for controlling blinds, shutters, and other RF devices via serial connection.
+Home Assistant integration for SIGNALduino RF receiver/transmitter hardware. Supports SOMFY RTS protocol for controlling blinds, shutters, and other RF devices via serial connection. I'm using this [SIGNALduino USB stick](https://in-circuit.de/shop/signalduino/), but you can also use a DIY variant (see [FHEM/SIGNALduino](https://wiki.fhem.de/wiki/SIGNALduino)).
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Release](https://img.shields.io/github/v/release/thecodingdad/ha-signalduino)](https://github.com/thecodingdad/ha-signalduino/releases)
