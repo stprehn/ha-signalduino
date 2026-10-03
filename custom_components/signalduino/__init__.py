@@ -413,7 +413,7 @@ class SIGNALduinoHub:
 
         if self._flamingo_entities:
             callback(list(self._flamingo_entities.values()))
-    
+
     @callback
     def _on_flamingo_frame(self, protocol: str, hex_data: str) -> None:
         """Handle a received FLAMINGO frame from the SIGNALduino."""
@@ -439,6 +439,7 @@ class SIGNALduinoHub:
 
         entity = self._flamingo_entities.get(device_id)
         if entity:
+            entity.reset_alarm_timer()
             entity.update_from_device()
 
         _LOGGER.debug(
@@ -447,7 +448,7 @@ class SIGNALduinoHub:
             device_id,
             device.alarm_counter,
         )
-    
+
     @callback
     def _on_connection_change(self, connected: bool) -> None:
         """Handle connection state change."""
