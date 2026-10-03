@@ -1,6 +1,7 @@
 """Binary sensors for SIGNALduino FLAMINGO devices."""
 
 from __future__ import annotations
+from datetime import timedelta
 
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
@@ -10,6 +11,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.event import async_call_later
 
 from .const import DOMAIN
 from .flamingo import FlamingoDevice
@@ -39,6 +41,7 @@ class FlamingoBinarySensor(BinarySensorEntity):
         """Initialize the FLAMINGO binary sensor."""
         self._hub = hub
         self._device = device
+        self._cancel_alarm_timer = None
 
         self._attr_unique_id = (
             f"{hub.entry_id}_flamingo_{device.device_id}"
@@ -74,6 +77,24 @@ class FlamingoBinarySensor(BinarySensorEntity):
             model="Unknown",
             via_device=(DOMAIN, self._hub.entry_id),
         )
+
+    def reset_alarm_timer(self) -> None:
+        """Reset the alarm timeout timer."""
+        if self._cancel_alarm_timer:
+            self._cancel_alarm_timer()
+
+        self._cancel_alarm_timer = async_call_later(
+            self.hass,
+            timedelta(seconds=15),
+            self._alarm_timeout,
+        )
+
+    @callback
+    def _alarm_timeout(self, _now) -> None:
+        """Clear the alarm state after 15 seconds without a telegram."""
+        self._cancel_alarm_timer = None
+        self._device.is_alarm = False
+        self.async_write_ha_state()
 
     @callback
     def update_from_device(self) -> None:
