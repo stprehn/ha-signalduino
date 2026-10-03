@@ -79,6 +79,7 @@ class SIGNALduinoProtocol:
 
         # Callbacks
         self._on_somfy_frame: Callable[[str], None] | None = None
+        self._on_flamingo_frame: Callable[[str, str], None] | None = None
         self._on_connection_change: Callable[[bool], None] | None = None
 
         self._closing = False
@@ -106,6 +107,10 @@ class SIGNALduinoProtocol:
     def set_somfy_callback(self, callback: Callable[[str], None]) -> None:
         """Set callback for received SOMFY frames."""
         self._on_somfy_frame = callback
+
+    def set_flamingo_callback(self, callback: Callable[[str, str], None]) -> None:
+        """Register callback for FLAMINGO frames."""
+        self._on_flamingo_frame = callback
 
     def set_connection_callback(self, callback: Callable[[bool], None]) -> None:
         """Set callback for connection state changes."""
@@ -294,6 +299,17 @@ class SIGNALduinoProtocol:
                 self._on_somfy_frame(hex_data)
             return
 
+        if line.startswith(("P13#", "P13.1#", "P13.2#")):
+            protocol, hex_data = line.split("#", 1)
+            _LOGGER.debug(
+                "FLAMINGO %s frame received: %s",
+                protocol,
+                hex_data,
+            )
+            if self._on_flamingo_frame:
+                self._on_flamingo_frame(protocol, hex_data)
+            return
+
         # Check for dispatched protocol message (P43#...)
         if line.startswith("P43#"):
             hex_data = line.split("#")[1] if "#" in line else ""
@@ -471,10 +487,13 @@ async def validate_connection(port: str, baud_rate: int = DEFAULT_BAUD_RATE) -> 
         writer.write(f"{CMD_VERSION}\n".encode())
         await writer.drain()
 
+        received_lines: list[str] = []
+
         for attempt in range(10):
             try:
                 line = await asyncio.wait_for(reader.readline(), timeout=5.0)
                 text = line.decode("utf-8", errors="replace").strip()
+                received_lines.append(text)
                 if not text:
                     continue
                 _LOGGER.debug("Validate received: %r", text)
