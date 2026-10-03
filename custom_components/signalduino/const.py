@@ -5,6 +5,7 @@ from homeassistant.const import Platform
 DOMAIN = "signalduino"
 
 PLATFORMS: list[Platform] = [
+    Platform.BINARY_SENSOR,
     Platform.BUTTON,
     Platform.COVER,
     Platform.NUMBER,
