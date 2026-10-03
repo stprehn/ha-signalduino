@@ -404,10 +404,15 @@ class SIGNALduinoHub:
         if entity:
             entity.on_external_command(frame.command)
 
-
-    def set_add_flamingo_entities_callback(self, callback) -> None:
+    def set_add_flamingo_entities_callback(
+        self,
+        callback: AddEntitiesCallback,
+    ) -> None:
         """Register callback for adding FLAMINGO entities."""
         self._add_flamingo_entities_callback = callback
+
+        if self._flamingo_entities:
+            callback(list(self._flamingo_entities.values()))
     
     @callback
     def _on_flamingo_frame(self, protocol: str, hex_data: str) -> None:
