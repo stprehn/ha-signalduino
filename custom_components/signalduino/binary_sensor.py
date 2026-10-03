@@ -1,6 +1,7 @@
 """Binary sensors for SIGNALduino FLAMINGO devices."""
 
 from __future__ import annotations
+
 from datetime import timedelta
 
 from homeassistant.components.binary_sensor import (
@@ -77,6 +78,12 @@ class FlamingoBinarySensor(BinarySensorEntity):
             model="Unknown",
             via_device=(DOMAIN, self._hub.entry_id),
         )
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Cancel the alarm timer when the entity is removed."""
+        if self._cancel_alarm_timer:
+            self._cancel_alarm_timer()
+            self._cancel_alarm_timer = None
 
     def reset_alarm_timer(self) -> None:
         """Reset the alarm timeout timer."""
