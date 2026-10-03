@@ -437,6 +437,10 @@ class SIGNALduinoHub:
 
         device.receive(protocol)
 
+        entity = self._flamingo_entities.get(device_id)
+        if entity:
+            entity.update_from_device()
+
         _LOGGER.debug(
             "FLAMINGO frame: protocol=%s device=%s alarm_counter=%d",
             protocol,
