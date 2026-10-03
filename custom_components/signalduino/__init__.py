@@ -32,6 +32,7 @@ from .const import (
     SOMFY_DEFAULT_REPEATS,
 )
 from .cover import SomfyCover
+from .flamingo import FlamingoDevice
 from .protocol import SIGNALduinoProtocol
 from .somfy import (
     SomfyDevice,
@@ -231,6 +232,7 @@ class SIGNALduinoHub:
         )
         self.store = SIGNALduinoStore(hass, entry.entry_id)
         self._cover_entities: dict[str, SomfyCover] = {}
+        self._flamingo_devices: dict[str, FlamingoDevice] = {}
         self._add_entities_callback: AddEntitiesCallback | None = None
 
     @property
@@ -402,12 +404,28 @@ class SIGNALduinoHub:
     @callback
     def _on_flamingo_frame(self, protocol: str, hex_data: str) -> None:
         """Handle a received FLAMINGO frame from the SIGNALduino."""
-        _LOGGER.debug(
-            "FLAMINGO frame: protocol=%s data=%s",
-            protocol,
-            hex_data,
-        )
 
+        device_id = hex_data.upper()
+
+        device = self._flamingo_devices.get(device_id)
+
+        if device is None:
+            device = FlamingoDevice(
+                device_id=device_id,
+                protocol=protocol,
+            )
+            self._flamingo_devices[device_id] = device
+            _LOGGER.info("Discovered FLAMINGO device %s", device_id)
+
+         device.receive(protocol)
+
+        _LOGGER.debug(
+            "FLAMINGO frame: protocol=%s device=%s alarm_counter=%d",
+            protocol,
+            device_id,
+            device.alarm_counter,
+        )
+    
     @callback
     def _on_connection_change(self, connected: bool) -> None:
         """Handle connection state change."""
