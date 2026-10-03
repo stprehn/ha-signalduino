@@ -270,8 +270,9 @@ class SIGNALduinoHub:
         await self._sync_devices_from_options_to_store()
 
         self.protocol.set_somfy_callback(self._on_somfy_frame)
+        self.protocol.set_flamingo_callback(self._on_flamingo_frame)
         self.protocol.set_connection_callback(self._on_connection_change)
-
+        
         # Small delay to let the serial port settle after config flow validation
         await asyncio.sleep(2)
 
@@ -397,6 +398,15 @@ class SIGNALduinoHub:
         entity = self._cover_entities.get(frame.address)
         if entity:
             entity.on_external_command(frame.command)
+
+    @callback
+    def _on_flamingo_frame(self, protocol: str, hex_data: str) -> None:
+        """Handle a received FLAMINGO frame from the SIGNALduino."""
+        _LOGGER.debug(
+            "FLAMINGO frame: protocol=%s data=%s",
+            protocol,
+            hex_data,
+        )
 
     @callback
     def _on_connection_change(self, connected: bool) -> None:
