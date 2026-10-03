@@ -33,6 +33,7 @@ from .const import (
 )
 from .cover import SomfyCover
 from .flamingo import FlamingoDevice
+from .binary_sensor import FlamingoBinarySensor
 from .protocol import SIGNALduinoProtocol
 from .somfy import (
     SomfyDevice,
@@ -233,6 +234,8 @@ class SIGNALduinoHub:
         self.store = SIGNALduinoStore(hass, entry.entry_id)
         self._cover_entities: dict[str, SomfyCover] = {}
         self._flamingo_devices: dict[str, FlamingoDevice] = {}
+        self._flamingo_entities: dict[str, FlamingoBinarySensor] = {}
+        self._add_flamingo_entities_callback = None
         self._add_entities_callback: AddEntitiesCallback | None = None
 
     @property
@@ -401,6 +404,11 @@ class SIGNALduinoHub:
         if entity:
             entity.on_external_command(frame.command)
 
+
+    def set_add_flamingo_entities_callback(self, callback) -> None:
+        """Register callback for adding FLAMINGO entities."""
+        self._add_flamingo_entities_callback = callback
+    
     @callback
     def _on_flamingo_frame(self, protocol: str, hex_data: str) -> None:
         """Handle a received FLAMINGO frame from the SIGNALduino."""
@@ -415,9 +423,14 @@ class SIGNALduinoHub:
                 protocol=protocol,
             )
             self._flamingo_devices[device_id] = device
+            entity = FlamingoBinarySensor(self, device)
+            self._flamingo_entities[device_id] = entity
+
+            if self._add_flamingo_entities_callback:
+                self._add_flamingo_entities_callback([entity])
             _LOGGER.info("Discovered FLAMINGO device %s", device_id)
 
-         device.receive(protocol)
+        device.receive(protocol)
 
         _LOGGER.debug(
             "FLAMINGO frame: protocol=%s device=%s alarm_counter=%d",
