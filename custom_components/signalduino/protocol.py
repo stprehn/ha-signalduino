@@ -9,6 +9,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
+import os
 from collections.abc import Callable
 from enum import Enum
 
@@ -405,37 +406,37 @@ class SIGNALduinoProtocol:
         if self._on_connection_change:
             self._on_connection_change(connected)
 
-
 async def validate_port_accessible(port: str) -> str | None:
-    """Check if a serial port exists and is accessible.
+    """Validate that the serial port is accessible."""
+    if port.startswith(("socket://", "tcp://")):
+        try:
+            from urllib.parse import urlparse
 
-    Returns an error key string if there's a problem, or None if accessible.
-    """
-    import os
-    import errno
+            parsed = urlparse(port)
+            if not parsed.hostname or not parsed.port:
+                return "invalid_network_url"
+
+            _, writer = await asyncio.wait_for(
+                asyncio.open_connection(parsed.hostname, parsed.port),
+                timeout=3,
+            )
+            writer.close()
+            await writer.wait_closed()
+            return None
+        except (OSError, asyncio.TimeoutError):
+            return "port_not_found"
 
     if not os.path.exists(port):
-        _LOGGER.error("Serial port does not exist: %s", port)
         return "port_not_found"
 
     try:
         fd = os.open(port, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
         os.close(fd)
-    except OSError as err:
-        if err.errno == errno.EBUSY:
-            _LOGGER.error(
-                "Serial port %s is busy (another process is using it)", port
-            )
-            return "port_busy"
-        if err.errno == errno.EACCES:
-            _LOGGER.error("Permission denied for serial port %s", port)
-            return "port_permission"
-        _LOGGER.error("Cannot access serial port %s: %s", port, err)
-        return "cannot_connect"
+    except OSError:
+        return "port_not_accessible"
 
     return None
-
-
+    
 async def validate_connection(port: str, baud_rate: int = DEFAULT_BAUD_RATE) -> str | None:
     """Validate a serial connection and return firmware version.
 
@@ -471,10 +472,13 @@ async def validate_connection(port: str, baud_rate: int = DEFAULT_BAUD_RATE) -> 
         writer.write(f"{CMD_VERSION}\n".encode())
         await writer.drain()
 
+        received_lines: list[str] = []
+        
         for attempt in range(10):
             try:
                 line = await asyncio.wait_for(reader.readline(), timeout=5.0)
                 text = line.decode("utf-8", errors="replace").strip()
+                received_lines.append(text)
                 if not text:
                     continue
                 _LOGGER.debug("Validate received: %r", text)
