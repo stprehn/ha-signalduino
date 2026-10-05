@@ -121,8 +121,12 @@ class SIGNALduinoProtocol:
         self._closing = False
         self._state = ConnectionState.CONNECTING
         try:
+            url = self._port
+            if url.startswith("tcp://"):
+                url = "socket://" + url[6:]
+
             self._reader, self._writer = await open_serial_connection(
-                url=self._port, baudrate=self._baud_rate
+                url=url, baudrate=self._baud_rate
             )
         except Exception:
             _LOGGER.error("Failed to open serial port %s", self._port)
@@ -459,8 +463,12 @@ async def validate_connection(port: str, baud_rate: int = DEFAULT_BAUD_RATE) -> 
     Returns firmware version string on success, None on failure.
     """
     try:
+        url = port
+        if url.startswith("tcp://"):
+            url = "socket://" + url[6:]
+
         reader, writer = await open_serial_connection(
-            url=port, baudrate=baud_rate
+            url=url, baudrate=baud_rate
         )
     except Exception:
         _LOGGER.error(
